@@ -22,17 +22,15 @@ const api = (0, express_1.default)();
 api.use(corsMiddleware);
 api.use(jsonMiddleware);
 api.post('/test', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { email } = req.body;
     const apiUrl = 'https://api.identityprotection-services.com/EnfortraV1.06.asmx';
-    //const loginPassword = 'DeSA4a736pnBqzwjC9WQME';
-    // const memberId = 'Scoretribe';
-    // const partnerId = '157';
     const soapRequest = `<?xml version="1.0" encoding="utf-8"?>
        <soap12:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://www.w3.org/2003/05/soap-envelope">
          <soap12:Body>
            <GetFullCreditReport xmlns="https://api.identityprotection-services.com">
                <APILoginName>APIScoreTribe@enfotra.com</APILoginName>
                <APILoginPassword>DeSA4a736pnBqzwjC9WQME</APILoginPassword>
-               <UserEmailAddress>blmejia4@gmail.com</UserEmailAddress>
+               <UserEmailAddress>${email}</UserEmailAddress>
                <OutputType>JSON</OutputType>
                <ErrMsg></ErrMsg>
            </GetFullCreditReport>
@@ -45,13 +43,9 @@ api.post('/test', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             'Connection': 'keep-alive',
             'Accept-Encoding': 'gzip, deflate, br',
             'Accept': '*/*',
-            //'Host': '<calculated when request is sent>',
-            //'API-Key': apiKey,
-            //'SOAPAction': 'https://api.identityprotection-services.com/GetFullCreditReport'
         },
         body: soapRequest,
     });
-    //console.log('Response', response)
     const data = yield response.text();
     const parsed = parser.parse(data);
     const string = parsed['soap:Envelope']['soap:Body'].GetFullCreditReportResponse.GetFullCreditReportResult;
